@@ -1,4 +1,4 @@
-import { getTransactions } from "@/db/queries/transactions";
+import { getTransactions, getTransactionsWithDetails } from "@/db/queries/transactions";
 import {
   Table,
   TableBody,
@@ -34,7 +34,7 @@ function formatDate(date: string | null) {
 }
 
 export default async function Transactions() {
-  const transactions = await getTransactions(1);
+  const transactions = await getTransactionsWithDetails(1);
 
   const totalIncome = transactions
     .filter((t) => t.amount > 0)
@@ -114,6 +114,7 @@ export default async function Transactions() {
             <Table>
               <TableHeader>
                 <TableRow>
+                  <TableHead>Account Name</TableHead>
                   <TableHead>Description</TableHead>
                   <TableHead>Category</TableHead>
                   <TableHead>Date</TableHead>
@@ -125,20 +126,22 @@ export default async function Transactions() {
                 {transactions.map((transaction) => (
                   <TableRow key={transaction.id}>
                     <TableCell className="font-medium">
+                      {transaction.accountName}
+                    </TableCell>
+                    <TableCell className="text-muted-foreground">
                       {transaction.description}
                     </TableCell>
                     <TableCell className="text-muted-foreground">
-                      {transaction.category_id ?? "—"}
+                      {transaction.category ?? "—"}
                     </TableCell>
                     <TableCell className="text-muted-foreground">
                       {formatDate(transaction.date)}
                     </TableCell>
                     <TableCell
-                      className={`text-right font-semibold tabular-nums ${
-                        transaction.amount >= 0
-                          ? "text-emerald-600"
-                          : "text-red-600"
-                      }`}
+                      className={`text-right font-semibold tabular-nums ${transaction.amount >= 0
+                        ? "text-emerald-600"
+                        : "text-red-600"
+                        }`}
                     >
                       {transaction.amount >= 0 ? "+" : "−"}
                       {formatCurrency(transaction.amount)}
