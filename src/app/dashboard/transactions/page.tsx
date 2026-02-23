@@ -1,4 +1,4 @@
-import { getTransactions, getTransactionsWithDetails } from "@/db/queries/transactions";
+import { getTransactionsWithDetails } from "@/db/queries/transactions";
 import {
   Table,
   TableBody,
