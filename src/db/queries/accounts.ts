@@ -12,7 +12,7 @@ export async function getAccountsWithDetails(userId: number) {
     transactions: count(transactionsTable.id),
   })
     .from(accountsTable)
-    .innerJoin(transactionsTable, eq(transactionsTable.account_id, accountsTable.id))
+    .leftJoin(transactionsTable, eq(transactionsTable.account_id, accountsTable.id))
     .where(eq(accountsTable.user_id, userId))
     .groupBy(accountsTable.id, accountsTable.name, accountsTable.type, accountsTable.balance, accountsTable.currency);
 }
