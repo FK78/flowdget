@@ -38,6 +38,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { ArrowDownLeft, ArrowUpRight, CheckCircle2, Receipt, RefreshCw, Trash2, XCircle } from "lucide-react";
 import { deleteTransaction } from "@/db/mutations/transactions";
+import { formatCurrency } from "@/lib/formatCurrency";
 
 function DeleteTransactionButton({
   transaction,
@@ -116,13 +117,6 @@ type Transaction = {
 
 type Account = { id: number; accountName: string };
 type Category = { id: number; name: string };
-
-function formatCurrency(amount: number) {
-  return new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: "USD",
-  }).format(amount);
-}
 
 function formatDate(date: string | null) {
   if (!date) return "—";

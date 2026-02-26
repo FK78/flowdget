@@ -13,13 +13,7 @@ import {
   TrendingUp,
 } from "lucide-react";
 import { getBudgets } from "@/db/queries/budgets";
-
-function formatCurrency(amount: number) {
-  return new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: "USD",
-  }).format(amount);
-}
+import { formatCurrency } from "@/lib/formatCurrency";
 
 export default async function Budgets() {
   const budgets = await getBudgets(1);
