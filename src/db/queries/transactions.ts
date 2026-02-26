@@ -33,7 +33,7 @@ function baseTransactionsQuery(userId: number) {
 }
 
 export async function getTransactionsWithDetails(userId: number) {
-  return await baseTransactionsQuery(userId);
+  return await baseTransactionsQuery(userId).orderBy(desc(transactionsTable.date));
 }
 
 export async function getLatestFiveTransactionsWithDetails(userId: number) {
