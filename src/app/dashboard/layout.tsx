@@ -7,12 +7,14 @@ import {
   ArrowLeftRight,
   Wallet,
   Target,
+  Tags,
 } from "lucide-react";
 
 const navItems = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { href: "/dashboard/transactions", label: "Transactions", icon: ArrowLeftRight },
   { href: "/dashboard/accounts", label: "Accounts", icon: Wallet },
+  { href: "/dashboard/categories", label: "Categories", icon: Tags },
   { href: "/dashboard/budgets", label: "Budgets", icon: Target },
 ];
 
