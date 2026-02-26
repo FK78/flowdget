@@ -1,6 +1,6 @@
 import { db } from '@/index';
 import { transactionsTable, categoriesTable, accountsTable } from '@/db/schema';
-import { desc, eq } from 'drizzle-orm';
+import { and, desc, eq, sum, gte, lt } from 'drizzle-orm';
 
 const transactionSelect = {
   id: transactionsTable.id,
@@ -18,7 +18,8 @@ function baseTransactionsQuery(userId: number) {
     .from(transactionsTable)
     .innerJoin(categoriesTable, eq(transactionsTable.category_id, categoriesTable.id))
     .innerJoin(accountsTable, eq(transactionsTable.account_id, accountsTable.id))
-    .where(eq(accountsTable.user_id, userId));
+    .where(eq(accountsTable.user_id, userId))
+    .$dynamic();
 }
 
 export async function getTransactionsWithDetails(userId: number) {
@@ -29,4 +30,22 @@ export async function getLatestFiveTransactionsWithDetails(userId: number) {
   return await baseTransactionsQuery(userId)
     .orderBy(desc(transactionsTable.date))
     .limit(5);
+}
+
+export async function getTotalIncomeOfTransactionsThisMonth(userId: number) {
+  const now = new Date();
+  const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+  const startOfNextMonth = new Date(now.getFullYear(), now.getMonth() + 1, 1);
+
+  return await db.select({ total: sum(transactionsTable.amount) })
+    .from(transactionsTable)
+    .innerJoin(accountsTable, eq(transactionsTable.account_id, accountsTable.id))
+    .where(
+      and(
+        eq(accountsTable.user_id, userId),
+        eq(transactionsTable.type, 'income'),
+        gte(transactionsTable.date, startOfMonth.toISOString().split('T')[0]),
+        lt(transactionsTable.date, startOfNextMonth.toISOString().split('T')[0])
+      )
+    );
 }
