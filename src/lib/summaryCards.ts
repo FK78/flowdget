@@ -22,7 +22,7 @@ export function getSummaryCards(
   return [
     {
       title: "Total Balance",
-      value: formatCurrency(totalBalance),
+      value: `${totalBalance < 0 ? "−" : ""}${formatCurrency(totalBalance)}`,
       change: pctChange(totalBalance, lastMonthBalance),
       icon: DollarSign,
       color: "text-foreground",
