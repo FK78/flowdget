@@ -15,13 +15,7 @@ import {
 } from "lucide-react";
 import { getAccountsWithDetails } from "@/db/queries/accounts";
 import { AddAccountForm } from "@/components/AddAccountForm";
-
-function formatCurrency(amount: number) {
-  return new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: "USD",
-  }).format(Math.abs(amount));
-}
+import { formatCurrency } from "@/lib/formatCurrency";
 
 const typeConfig: Record<string, { label: string; variant: "default" | "secondary" | "destructive" | "outline" }> = {
   checking: { label: "Checking", variant: "secondary" },
