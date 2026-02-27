@@ -84,7 +84,7 @@ export function BudgetCharts({
   } satisfies ChartConfig;
 
   return (
-    <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+    <div className="space-y-6">
       <Card>
         <CardHeader>
           <CardTitle>Budget vs Spent</CardTitle>
@@ -93,18 +93,22 @@ export function BudgetCharts({
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <ChartContainer config={comparisonConfig} className="min-h-[280px] w-full">
+          <ChartContainer config={comparisonConfig} className="min-h-[320px] w-full">
             <BarChart
               data={comparisonData}
               accessibilityLayer
-              margin={{ left: 8, right: 8, top: 8 }}
+              margin={{ left: 8, right: 8, top: 8, bottom: 16 }}
             >
               <CartesianGrid vertical={false} />
               <XAxis
                 dataKey="category"
                 tickLine={false}
                 axisLine={false}
-                tickMargin={8}
+                tickMargin={12}
+                angle={-35}
+                textAnchor="end"
+                height={60}
+                interval={0}
               />
               <YAxis
                 tickLine={false}
