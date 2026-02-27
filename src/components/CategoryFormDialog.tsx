@@ -16,6 +16,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { addCategory, editCategory } from "@/db/mutations/categories";
+import { getCurrentUserIdClient } from "@/lib/auth-client";
 
 type Category = {
   id: number;
@@ -68,7 +69,8 @@ export function CategoryFormDialog({ category }: { category?: Category }) {
       if (isEdit) {
         await editCategory(category.id, formData);
       } else {
-        await addCategory(formData);
+        const userId = await getCurrentUserIdClient();
+        await addCategory(formData, userId);
       }
       setView("success");
     });

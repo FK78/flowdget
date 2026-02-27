@@ -18,11 +18,14 @@ import { formatCurrency } from "@/lib/formatCurrency";
 import { BudgetFormDialog } from "@/components/AddBudgetForm";
 import { DeleteBudgetButton } from "@/components/DeleteBudgetButton";
 import { getCategoryIcon } from "@/lib/categoryIcons";
+import { getCurrentUserId } from "@/lib/auth";
 
 export default async function Budgets() {
+  const userId = await getCurrentUserId();
+  
   const [budgets, categories] = await Promise.all([
-    getBudgets(1),
-    getCategoriesByUser(1),
+    getBudgets(userId),
+    getCategoriesByUser(userId),
   ]);
 
   const totalBudget = budgets.reduce((sum, b) => sum + b.budgetAmount, 0);

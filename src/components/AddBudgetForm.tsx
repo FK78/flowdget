@@ -22,6 +22,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { addBudget, editBudget } from "@/db/mutations/budgets";
+import { getCurrentUserIdClient } from "@/lib/auth-client";
 
 type Category = {
   id: number;
@@ -63,7 +64,8 @@ export function BudgetFormDialog({ categories, budget }: { categories: Category[
       if (isEdit) {
         await editBudget(budget.id, formData);
       } else {
-        await addBudget(formData);
+        const userId = await getCurrentUserIdClient();
+        await addBudget(formData, userId);
       }
       setView("success");
     });
