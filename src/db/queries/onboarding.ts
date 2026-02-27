@@ -1,6 +1,7 @@
 import { db } from '@/index';
 import { defaultCategoryTemplatesTable, userOnboardingTable } from '@/db/schema';
 import { asc, eq } from 'drizzle-orm';
+import { DEFAULT_BASE_CURRENCY, normalizeBaseCurrency } from '@/lib/currency';
 
 export async function getOnboardingState(userId: string) {
   const [row] = await db.select()
@@ -14,6 +15,11 @@ export async function getOnboardingState(userId: string) {
 export async function hasCompletedOnboarding(userId: string) {
   const state = await getOnboardingState(userId);
   return state?.completed === true;
+}
+
+export async function getUserBaseCurrency(userId: string) {
+  const state = await getOnboardingState(userId);
+  return normalizeBaseCurrency(state?.base_currency ?? DEFAULT_BASE_CURRENCY);
 }
 
 export async function getDefaultCategoryTemplates() {

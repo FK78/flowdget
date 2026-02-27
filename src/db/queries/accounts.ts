@@ -8,11 +8,10 @@ export async function getAccountsWithDetails(userId: string) {
     accountName: accountsTable.name,
     type: accountsTable.type,
     balance: accountsTable.balance,
-    currency: accountsTable.currency,
     transactions: count(transactionsTable.id),
   })
     .from(accountsTable)
     .leftJoin(transactionsTable, eq(transactionsTable.account_id, accountsTable.id))
     .where(eq(accountsTable.user_id, userId))
-    .groupBy(accountsTable.id, accountsTable.name, accountsTable.type, accountsTable.balance, accountsTable.currency);
+    .groupBy(accountsTable.id, accountsTable.name, accountsTable.type, accountsTable.balance);
 }

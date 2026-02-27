@@ -28,7 +28,6 @@ type Account = {
   accountName: string;
   type: string | null;
   balance: number;
-  currency: string;
 };
 
 export function AccountFormDialog({ account }: { account?: Account } = {}) {
@@ -111,7 +110,9 @@ export function AccountFormDialog({ account }: { account?: Account } = {}) {
             <DialogHeader>
               <DialogTitle>{isEdit ? "Edit Account" : "Add Account"}</DialogTitle>
               <DialogDescription>
-                {isEdit ? "Update the account details." : "Enter the details for a new account."}
+                {isEdit
+                  ? "Update the account details. Currency follows your onboarding base currency."
+                  : "Enter the details for a new account. Currency follows your onboarding base currency."}
               </DialogDescription>
             </DialogHeader>
             <form
@@ -159,22 +160,6 @@ export function AccountFormDialog({ account }: { account?: Account } = {}) {
                   placeholder="0.00"
                   required
                 />
-              </div>
-
-              {/* Currency */}
-              <div className="grid gap-2">
-                <Label htmlFor="currency">Currency</Label>
-                <Select name="currency" defaultValue={account?.currency ?? "USD"}>
-                  <SelectTrigger id="currency">
-                    <SelectValue placeholder="Select currency" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="USD">USD</SelectItem>
-                    <SelectItem value="EUR">EUR</SelectItem>
-                    <SelectItem value="GBP">GBP</SelectItem>
-                    <SelectItem value="CAD">CAD</SelectItem>
-                  </SelectContent>
-                </Select>
               </div>
 
               <DialogFooter>

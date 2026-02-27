@@ -15,6 +15,7 @@ export const defaultCategoryTemplatesTable = pgTable("default_category_templates
 
 export const userOnboardingTable = pgTable("user_onboarding", {
   user_id: uuid("user_id").primaryKey(),
+  base_currency: varchar({ length: 3 }).notNull().default("USD"),
   use_default_categories: boolean().notNull().default(false),
   completed: boolean().notNull().default(false),
   completed_at: timestamp("completed_at", { withTimezone: true }),

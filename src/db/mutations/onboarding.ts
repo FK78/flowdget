@@ -1,19 +1,22 @@
 'use server';
 
 import { db } from '@/index';
-import { categoriesTable, defaultCategoryTemplatesTable, userOnboardingTable } from '@/db/schema';
+import { accountsTable, categoriesTable, defaultCategoryTemplatesTable, userOnboardingTable } from '@/db/schema';
 import { eq } from 'drizzle-orm';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { getCurrentUserId } from '@/lib/auth';
+import { DEFAULT_BASE_CURRENCY, normalizeBaseCurrency } from '@/lib/currency';
 
 async function upsertOnboardingState(userId: string, updates: Partial<{
+  base_currency: string;
   use_default_categories: boolean;
   completed: boolean;
   completed_at: Date | null;
 }>) {
   await db.insert(userOnboardingTable).values({
     user_id: userId,
+    base_currency: normalizeBaseCurrency(updates.base_currency ?? DEFAULT_BASE_CURRENCY),
     use_default_categories: updates.use_default_categories ?? false,
     completed: updates.completed ?? false,
     completed_at: updates.completed_at ?? null,
@@ -49,6 +52,34 @@ async function insertMissingDefaultCategories(userId: string) {
   if (rowsToInsert.length > 0) {
     await db.insert(categoriesTable).values(rowsToInsert);
   }
+}
+
+export async function setBaseCurrency(formData: FormData) {
+  const userId = await getCurrentUserId();
+  const baseCurrency = normalizeBaseCurrency(formData.get('base_currency') as string | null);
+
+  await db.transaction(async (tx) => {
+    await tx.insert(userOnboardingTable).values({
+      user_id: userId,
+      base_currency: baseCurrency,
+      use_default_categories: false,
+      completed: false,
+      completed_at: null,
+    }).onConflictDoUpdate({
+      target: userOnboardingTable.user_id,
+      set: { base_currency: baseCurrency },
+    });
+
+    await tx.update(accountsTable)
+      .set({ currency: baseCurrency })
+      .where(eq(accountsTable.user_id, userId));
+  });
+
+  revalidatePath('/onboarding');
+  revalidatePath('/dashboard');
+  revalidatePath('/dashboard/accounts');
+  revalidatePath('/dashboard/budgets');
+  revalidatePath('/dashboard/transactions');
 }
 
 export async function continueFromCategories(formData: FormData) {

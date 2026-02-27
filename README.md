@@ -132,7 +132,7 @@ Seven core tables plus onboarding/template tables managed by Drizzle ORM:
 - **budgets** — spending limits per category with monthly/weekly periods
 - **categorisation_rules** — pattern-based auto-categorisation rules
 - **default_category_templates** — database-backed default category definitions used during onboarding
-- **user_onboarding** — per-user onboarding state and default-category preference
+- **user_onboarding** — per-user onboarding state, base currency, and default-category preference
 
 ## License
 

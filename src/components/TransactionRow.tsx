@@ -1,7 +1,13 @@
 import { formatCurrency } from "@/lib/formatCurrency";
 import { TableCell, TableRow } from "./ui/table";
 
-export function TransactionRow({ t }: { t: { id: number; description: string | null; category: string; date: string | null; amount: number; type: "income" | "expense" } }) {
+export function TransactionRow({
+  t,
+  currency,
+}: {
+  t: { id: number; description: string | null; category: string; date: string | null; amount: number; type: "income" | "expense" };
+  currency: string;
+}) {
     return (
         <TableRow>
             <TableCell className="font-medium">
@@ -18,7 +24,7 @@ export function TransactionRow({ t }: { t: { id: number; description: string | n
                     }`}
             >
                 {t.type === "income" ? "+" : "−"}
-                {formatCurrency(t.amount)}
+                {formatCurrency(t.amount, currency)}
             </TableCell>
         </TableRow>
     );

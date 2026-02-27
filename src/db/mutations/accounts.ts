@@ -5,30 +5,37 @@ import { accountsTable, transactionsTable } from '@/db/schema';
 import { eq } from 'drizzle-orm';
 import { revalidatePath } from 'next/cache';
 import { getCurrentUserId } from '@/lib/auth';
+import { getUserBaseCurrency } from '@/db/queries/onboarding';
 
 export async function addAccount(formData: FormData) {
   const userId = await getCurrentUserId();
+  const baseCurrency = await getUserBaseCurrency(userId);
 
   const [result] = await db.insert(accountsTable).values({
     user_id: userId,
     name: formData.get('name') as string,
     type: formData.get('type') as 'checking' | 'savings' | 'credit_card' | 'investment',
     balance: parseFloat(formData.get('balance') as string),
-    currency: (formData.get('currency') as string) || 'USD',
+    currency: baseCurrency,
   }).returning({ id: accountsTable.id });
   revalidatePath('/onboarding');
   revalidatePath('/dashboard/accounts');
+  revalidatePath('/dashboard');
   return result;
 }
 
 export async function editAccount(id: number, formData: FormData) {
+  const userId = await getCurrentUserId();
+  const baseCurrency = await getUserBaseCurrency(userId);
+
   await db.update(accountsTable).set({
     name: formData.get('name') as string,
     type: formData.get('type') as 'checking' | 'savings' | 'credit_card' | 'investment',
     balance: parseFloat(formData.get('balance') as string),
-    currency: (formData.get('currency') as string) || 'USD',
+    currency: baseCurrency,
   }).where(eq(accountsTable.id, id));
   revalidatePath('/dashboard/accounts');
+  revalidatePath('/dashboard');
 }
 
 export async function deleteAccount(id: number) {

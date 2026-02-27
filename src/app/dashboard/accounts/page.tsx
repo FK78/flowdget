@@ -18,6 +18,7 @@ import { AccountFormDialog } from "@/components/AddAccountForm";
 import { DeleteAccountButton } from "@/components/DeleteAccountButton";
 import { formatCurrency } from "@/lib/formatCurrency";
 import { getCurrentUserId } from "@/lib/auth";
+import { getUserBaseCurrency } from "@/db/queries/onboarding";
 
 const typeConfig: Record<string, { label: string; variant: "default" | "secondary" | "destructive" | "outline" }> = {
   checking: { label: "Checking", variant: "secondary" },
@@ -36,7 +37,10 @@ export const typeIcons: Record<string, typeof Wallet> = {
 export default async function Accounts() {
   const userId = await getCurrentUserId();
 
-  const accounts = await getAccountsWithDetails(userId);
+  const [accounts, baseCurrency] = await Promise.all([
+    getAccountsWithDetails(userId),
+    getUserBaseCurrency(userId),
+  ]);
 
   const liabilityTypes = new Set(["credit_card"]);
   const totalAssets = accounts
@@ -71,7 +75,7 @@ export default async function Accounts() {
           </CardHeader>
           <CardContent>
             <CardTitle className={`text-2xl ${totalBalance < 0 ? "text-red-600" : ""}`}>
-              {totalBalance < 0 ? "−" : ""}{formatCurrency(totalBalance)}
+              {totalBalance < 0 ? "−" : ""}{formatCurrency(totalBalance, baseCurrency)}
             </CardTitle>
             <p className="text-muted-foreground mt-1 text-xs">
               Across {accounts.length} accounts
@@ -87,7 +91,7 @@ export default async function Accounts() {
           </CardHeader>
           <CardContent>
             <CardTitle className={`text-2xl ${totalAssets < 0 ? "text-red-600" : "text-emerald-600"}`}>
-              {totalAssets < 0 ? "−" : ""}{formatCurrency(totalAssets)}
+              {totalAssets < 0 ? "−" : ""}{formatCurrency(totalAssets, baseCurrency)}
             </CardTitle>
           </CardContent>
         </Card>
@@ -100,7 +104,7 @@ export default async function Accounts() {
           </CardHeader>
           <CardContent>
             <CardTitle className="text-2xl text-red-600">
-              {formatCurrency(totalLiabilities)}
+              {formatCurrency(totalLiabilities, baseCurrency)}
             </CardTitle>
           </CardContent>
         </Card>
@@ -135,8 +139,7 @@ export default async function Accounts() {
                     <div>
                       <CardTitle className="text-base">{account.accountName}</CardTitle>
                       <CardDescription className="text-xs">
-                        {account.currency} &middot; {account.transactions}{" "}
-                        transactions
+                        {account.transactions} transactions
                       </CardDescription>
                     </div>
                   </div>
@@ -152,7 +155,7 @@ export default async function Accounts() {
                       }`}
                   >
                     {account.balance < 0 ? "−" : ""}
-                    {formatCurrency(account.balance)}
+                    {formatCurrency(account.balance, baseCurrency)}
                   </p>
                   {/* Balance bar relative to total assets */}
                   <div className="mt-3">
