@@ -22,16 +22,16 @@ import { getUserBaseCurrency } from "@/db/queries/onboarding";
 import { AccountCharts } from "@/components/AccountCharts";
 
 const typeConfig: Record<string, { label: string; variant: "default" | "secondary" | "destructive" | "outline" }> = {
-  checking: { label: "Checking", variant: "secondary" },
+  currentAccount: { label: "Current Account", variant: "secondary" },
   savings: { label: "Savings", variant: "default" },
-  credit_card: { label: "Credit Card", variant: "destructive" },
+  creditCard: { label: "Credit Card", variant: "destructive" },
   investment: { label: "Investment", variant: "outline" },
 };
 
 export const typeIcons: Record<string, typeof Wallet> = {
-  checking: Wallet,
+  currentAccount: Wallet,
   savings: PiggyBank,
-  credit_card: CreditCard,
+  creditCard: CreditCard,
   investment: TrendingUp,
 };
 
@@ -43,7 +43,7 @@ export default async function Accounts() {
     getUserBaseCurrency(userId),
   ]);
 
-  const liabilityTypes = new Set(["credit_card"]);
+  const liabilityTypes = new Set(["creditCard"]);
   const totalAssets = accounts
     .filter((a) => !liabilityTypes.has(a.type ?? ""))
     .reduce((sum, a) => sum + a.balance, 0);

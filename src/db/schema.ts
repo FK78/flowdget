@@ -1,6 +1,6 @@
 import { boolean, date, integer, pgEnum, pgTable, real, timestamp, varchar, uuid, text } from "drizzle-orm/pg-core";
 
-export const accountTypeEnum = pgEnum("account_type", ["checking", "savings", "credit_card", "investment"]);
+export const accountTypeEnum = pgEnum("account_type", ["currentAccount", "savings", "creditCard", "investment"]);
 export const periodEnum = pgEnum("period", ["monthly", "weekly"]);
 export const transactionTypeEnum = pgEnum("transaction_type", ["income", "expense"]);
 
@@ -15,7 +15,7 @@ export const defaultCategoryTemplatesTable = pgTable("default_category_templates
 
 export const userOnboardingTable = pgTable("user_onboarding", {
   user_id: uuid("user_id").primaryKey(),
-  base_currency: varchar({ length: 3 }).notNull().default("USD"),
+  base_currency: varchar({ length: 3 }).notNull().default("GBP"),
   use_default_categories: boolean().notNull().default(false),
   completed: boolean().notNull().default(false),
   completed_at: timestamp("completed_at", { withTimezone: true }),

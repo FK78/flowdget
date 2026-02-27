@@ -38,14 +38,14 @@ import {
 type RangeOption = 7 | 30 | 90;
 
 function formatDayLabel(day: string) {
-  return new Intl.DateTimeFormat("en-US", {
+  return new Intl.DateTimeFormat("en-GB", {
     month: "short",
     day: "numeric",
   }).format(new Date(day));
 }
 
 function formatCompactCurrency(amount: number, currency: string) {
-  return new Intl.NumberFormat("en-US", {
+  return new Intl.NumberFormat("en-GB", {
     style: "currency",
     currency,
     notation: "compact",

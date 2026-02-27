@@ -1,8 +1,8 @@
-export const SUPPORTED_BASE_CURRENCIES = ["USD", "EUR", "GBP", "CAD", "AUD"] as const;
+export const SUPPORTED_BASE_CURRENCIES = ["GBP", "USD", "EUR", "CAD", "AUD"] as const;
 
 export type BaseCurrency = (typeof SUPPORTED_BASE_CURRENCIES)[number];
 
-export const DEFAULT_BASE_CURRENCY: BaseCurrency = "USD";
+export const DEFAULT_BASE_CURRENCY: BaseCurrency = "GBP";
 
 export function normalizeBaseCurrency(value?: string | null): BaseCurrency {
   if (!value) {

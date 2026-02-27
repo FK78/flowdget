@@ -1,5 +1,5 @@
 -- Enums
-CREATE TYPE account_type AS ENUM ('checking', 'savings', 'credit_card', 'investment');
+CREATE TYPE account_type AS ENUM ('currentAccount', 'savings', 'creditCard', 'investment');
 CREATE TYPE period AS ENUM ('monthly', 'weekly');
 CREATE TYPE transaction_type AS ENUM ('income', 'expense');
 

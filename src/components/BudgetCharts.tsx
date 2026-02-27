@@ -33,7 +33,7 @@ type BudgetItem = {
 };
 
 function formatCompactCurrency(amount: number, currency: string) {
-  return new Intl.NumberFormat("en-US", {
+  return new Intl.NumberFormat("en-GB", {
     style: "currency",
     currency,
     notation: "compact",

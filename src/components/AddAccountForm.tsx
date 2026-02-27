@@ -126,7 +126,7 @@ export function AccountFormDialog({ account }: { account?: Account } = {}) {
                 <Input
                   id="name"
                   name="name"
-                  placeholder="e.g. Main Checking"
+                  placeholder="e.g. Main Current Account"
                   defaultValue={account?.accountName ?? ""}
                   required
                 />
@@ -135,14 +135,14 @@ export function AccountFormDialog({ account }: { account?: Account } = {}) {
               {/* Type */}
               <div className="grid gap-2">
                 <Label htmlFor="type">Type</Label>
-                <Select name="type" defaultValue={account?.type ?? "checking"}>
+                <Select name="type" defaultValue={account?.type ?? "currentAccount"}>
                   <SelectTrigger id="type">
                     <SelectValue placeholder="Select type" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="checking">Checking</SelectItem>
+                    <SelectItem value="currentAccount">Current Account</SelectItem>
                     <SelectItem value="savings">Savings</SelectItem>
-                    <SelectItem value="credit_card">Credit Card</SelectItem>
+                    <SelectItem value="creditCard">Credit Card</SelectItem>
                     <SelectItem value="investment">Investment</SelectItem>
                   </SelectContent>
                 </Select>

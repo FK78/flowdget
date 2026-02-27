@@ -14,7 +14,7 @@ export async function addAccount(formData: FormData) {
   const [result] = await db.insert(accountsTable).values({
     user_id: userId,
     name: formData.get('name') as string,
-    type: formData.get('type') as 'checking' | 'savings' | 'credit_card' | 'investment',
+    type: formData.get('type') as 'currentAccount' | 'savings' | 'creditCard' | 'investment',
     balance: parseFloat(formData.get('balance') as string),
     currency: baseCurrency,
   }).returning({ id: accountsTable.id });
@@ -30,7 +30,7 @@ export async function editAccount(id: number, formData: FormData) {
 
   await db.update(accountsTable).set({
     name: formData.get('name') as string,
-    type: formData.get('type') as 'checking' | 'savings' | 'credit_card' | 'investment',
+    type: formData.get('type') as 'currentAccount' | 'savings' | 'creditCard' | 'investment',
     balance: parseFloat(formData.get('balance') as string),
     currency: baseCurrency,
   }).where(eq(accountsTable.id, id));

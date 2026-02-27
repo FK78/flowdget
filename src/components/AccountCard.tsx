@@ -29,7 +29,7 @@ export function AccountCard({
           {formatCurrency(account.balance, currency)}
         </p>
         <Badge variant="secondary" className="mt-1 capitalize">
-          {account.type?.replace("_", " ")}
+          {account.type?.replace(/([a-z])([A-Z])/g, "$1 $2")}
         </Badge>
       </div>
     </div>
