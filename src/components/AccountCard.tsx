@@ -3,7 +3,13 @@ import { typeIcons } from "@/app/dashboard/accounts/page";
 import { Badge } from "./ui/badge";
 import { Wallet } from "lucide-react";
 
-export function AccountCard({ account }: { account: { accountName: string; type: string | null; balance: number } }) {
+export function AccountCard({
+  account,
+  currency,
+}: {
+  account: { accountName: string; type: string | null; balance: number };
+  currency: string;
+}) {
   const Icon = typeIcons[account.type ?? ""] ?? Wallet;
   return (
     <div
@@ -20,7 +26,7 @@ export function AccountCard({ account }: { account: { accountName: string; type:
           }`}
         >
           {account.balance < 0 ? "−" : ""}
-          {formatCurrency(account.balance)}
+          {formatCurrency(account.balance, currency)}
         </p>
         <Badge variant="secondary" className="mt-1 capitalize">
           {account.type?.replace("_", " ")}

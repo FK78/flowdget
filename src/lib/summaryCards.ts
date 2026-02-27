@@ -15,6 +15,7 @@ export function getSummaryCards(
   lastMonthExpenses: number,
   savingsBalance: number,
   savingsThisMonth: number,
+  currency: string,
 ) {
   const totalBalance = income - expenses;
   const lastMonthBalance = lastMonthIncome - lastMonthExpenses;
@@ -22,29 +23,29 @@ export function getSummaryCards(
   return [
     {
       title: "Total Balance",
-      value: `${totalBalance < 0 ? "−" : ""}${formatCurrency(totalBalance)}`,
+      value: `${totalBalance < 0 ? "−" : ""}${formatCurrency(totalBalance, currency)}`,
       change: pctChange(totalBalance, lastMonthBalance),
       icon: DollarSign,
       color: "text-foreground",
     },
     {
       title: "Income",
-      value: formatCurrency(income),
+      value: formatCurrency(income, currency),
       change: pctChange(income, lastMonthIncome),
       icon: ArrowUpRight,
       color: "text-emerald-600",
     },
     {
       title: "Expenses",
-      value: formatCurrency(expenses),
+      value: formatCurrency(expenses, currency),
       change: pctChange(expenses, lastMonthExpenses),
       icon: ArrowDownLeft,
       color: "text-red-600",
     },
     {
       title: "Savings",
-      value: formatCurrency(savingsBalance),
-      change: `+${formatCurrency(savingsThisMonth)} this month`,
+      value: formatCurrency(savingsBalance, currency),
+      change: `+${formatCurrency(savingsThisMonth, currency)} this month`,
       icon: PiggyBank,
       color: "text-blue-600",
     },

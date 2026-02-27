@@ -31,11 +31,12 @@ import { AccountCard } from "@/components/AccountCard";
 import { SpendCategoryRow } from "@/components/SpendCategoryRow";
 import { getCurrentUserId } from "@/lib/auth";
 import { Button } from "@/components/ui/button";
+import { getUserBaseCurrency } from "@/db/queries/onboarding";
 
 export default async function Home() {
   const userId = await getCurrentUserId();
   
-  const [lastFiveTransactions, accounts, expensesRows, incomeRows, lastMonthIncomeRows, lastMonthExpensesRows, savingsThisMonthRows, spendByCategory] =
+  const [lastFiveTransactions, accounts, expensesRows, incomeRows, lastMonthIncomeRows, lastMonthExpensesRows, savingsThisMonthRows, spendByCategory, baseCurrency] =
     await Promise.all([
       getLatestFiveTransactionsWithDetails(userId),
       getAccountsWithDetails(userId),
@@ -45,6 +46,7 @@ export default async function Home() {
       getTotalExpensesLastMonth(userId),
       getSavingsDepositsThisMonth(userId),
       getTotalSpendByCategoryThisMonth(userId),
+      getUserBaseCurrency(userId),
     ]);
 
   const income = parseTotal(incomeRows);
@@ -59,6 +61,7 @@ export default async function Home() {
     income, expenses,
     lastMonthIncome, lastMonthExpenses,
     savingsBalance, parseTotal(savingsThisMonthRows),
+    baseCurrency,
   );
   return (
     <div className="mx-auto max-w-5xl space-y-8 p-6 md:p-10">
@@ -104,7 +107,7 @@ export default async function Home() {
                 </TableHeader>
                 <TableBody>
                   {lastFiveTransactions.map((t) => (
-                    <TransactionRow key={t.id} t={t} />
+                    <TransactionRow key={t.id} t={t} currency={baseCurrency} />
                   ))}
                 </TableBody>
               </Table>
@@ -135,6 +138,7 @@ export default async function Home() {
                   total={cat.total}
                   color={cat.color}
                   income={income}
+                  currency={baseCurrency}
                 />
               ))
             )}
@@ -160,7 +164,7 @@ export default async function Home() {
           ) : (
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
               {accounts.map((account) => (
-                <AccountCard key={account.accountName} account={account} />
+                <AccountCard key={account.accountName} account={account} currency={baseCurrency} />
               ))}
             </div>
           )}

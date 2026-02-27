@@ -62,6 +62,7 @@ CREATE TABLE default_category_templates (
 
 CREATE TABLE user_onboarding (
   user_id UUID PRIMARY KEY,
+  base_currency VARCHAR(3) NOT NULL DEFAULT 'GBP',
   use_default_categories BOOLEAN NOT NULL DEFAULT false,
   completed BOOLEAN NOT NULL DEFAULT false,
   completed_at TIMESTAMPTZ

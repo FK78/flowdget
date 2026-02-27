@@ -22,11 +22,21 @@ import { addBudget } from "@/db/mutations/budgets";
 import {
   completeOnboarding,
   continueFromCategories,
+  setBaseCurrency,
   skipOnboarding,
 } from "@/db/mutations/onboarding";
 import { formatCurrency } from "@/lib/formatCurrency";
+import { normalizeBaseCurrency, SUPPORTED_BASE_CURRENCIES } from "@/lib/currency";
 
 type Step = "accounts" | "categories" | "budgets" | "review";
+
+const currencyLabels: Record<(typeof SUPPORTED_BASE_CURRENCIES)[number], string> = {
+  USD: "US Dollar ($)",
+  EUR: "Euro (€)",
+  GBP: "British Pound (£)",
+  CAD: "Canadian Dollar (CA$)",
+  AUD: "Australian Dollar (A$)",
+};
 
 function normalizeStep(value?: string): Step {
   if (value === "categories" || value === "budgets" || value === "review") {
@@ -74,6 +84,7 @@ export default async function OnboardingPage({
   }
 
   const defaultCategoryPreference = onboardingState?.use_default_categories ?? false;
+  const baseCurrency = normalizeBaseCurrency(onboardingState?.base_currency);
   const today = new Date().toISOString().split("T")[0];
 
   return (
@@ -109,10 +120,32 @@ export default async function OnboardingPage({
           <CardHeader>
             <CardTitle>Step 1: Accounts</CardTitle>
             <CardDescription>
-              Create one or more accounts, or skip this step.
+              Choose your base currency, then create accounts. Every amount in the app uses this currency.
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
+            <form action={setBaseCurrency} className="grid gap-4 rounded-md border p-4">
+              <div className="grid gap-2">
+                <Label htmlFor="base_currency">Base Currency</Label>
+                <select
+                  id="base_currency"
+                  name="base_currency"
+                  className="border-input bg-background rounded-md border px-3 py-2 text-sm"
+                  defaultValue={baseCurrency}
+                >
+                  {SUPPORTED_BASE_CURRENCIES.map((currencyCode) => (
+                    <option key={currencyCode} value={currencyCode}>
+                      {currencyLabels[currencyCode]}
+                    </option>
+                  ))}
+                </select>
+                <p className="text-muted-foreground text-xs">
+                  Selected currency: {currencyLabels[baseCurrency]}
+                </p>
+              </div>
+              <Button type="submit" className="w-fit" variant="outline">Save base currency</Button>
+            </form>
+
             <form action={addOnboardingAccount} className="grid gap-4 rounded-md border p-4">
               <div className="grid gap-2">
                 <Label htmlFor="name">Account Name</Label>
@@ -144,21 +177,6 @@ export default async function OnboardingPage({
                   required
                 />
               </div>
-              <div className="grid gap-2">
-                <Label htmlFor="currency">Currency</Label>
-                <select
-                  id="currency"
-                  name="currency"
-                  className="border-input bg-background rounded-md border px-3 py-2 text-sm"
-                  defaultValue="USD"
-                >
-                  <option value="USD">USD</option>
-                  <option value="EUR">EUR</option>
-                  <option value="GBP">GBP</option>
-                  <option value="CAD">CAD</option>
-                  <option value="AUD">AUD</option>
-                </select>
-              </div>
               <Button type="submit" className="w-fit">Add account</Button>
             </form>
 
@@ -171,7 +189,7 @@ export default async function OnboardingPage({
                   {accounts.map((account) => (
                     <div key={account.id} className="flex items-center justify-between rounded-md border p-3 text-sm">
                       <span>{account.accountName}</span>
-                      <span className="text-muted-foreground">{formatCurrency(account.balance)}</span>
+                      <span className="text-muted-foreground">{formatCurrency(account.balance, baseCurrency)}</span>
                     </div>
                   ))}
                 </div>
@@ -348,7 +366,7 @@ export default async function OnboardingPage({
                     <div key={budget.id} className="flex items-center justify-between rounded-md border p-3 text-sm">
                       <span>{budget.budgetCategory}</span>
                       <span className="text-muted-foreground">
-                        {formatCurrency(budget.budgetAmount)} / {budget.budgetPeriod}
+                        {formatCurrency(budget.budgetAmount, baseCurrency)} / {budget.budgetPeriod}
                       </span>
                     </div>
                   ))}

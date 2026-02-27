@@ -7,6 +7,7 @@ import { getAccountsWithDetails } from "@/db/queries/accounts";
 import { getCategoriesByUser } from "@/db/queries/categories";
 import { TransactionsClient } from "@/components/TransactionsClient";
 import { getCurrentUserId } from "@/lib/auth";
+import { getUserBaseCurrency } from "@/db/queries/onboarding";
 
 const PAGE_SIZE = 10;
 
@@ -29,11 +30,12 @@ export default async function Transactions({
   const requestedPage = normalizePage(resolvedSearchParams?.page);
   const userId = await getCurrentUserId();
 
-  const [transactions, accounts, categories, totalTransactions] = await Promise.all([
+  const [transactions, accounts, categories, totalTransactions, baseCurrency] = await Promise.all([
     getTransactionsWithDetailsPaginated(userId, requestedPage, PAGE_SIZE),
     getAccountsWithDetails(userId),
     getCategoriesByUser(userId),
     getTransactionsCount(userId),
+    getUserBaseCurrency(userId),
   ]);
   const totalPages = Math.max(1, Math.ceil(totalTransactions / PAGE_SIZE));
 
@@ -49,6 +51,7 @@ export default async function Transactions({
       currentPage={requestedPage}
       pageSize={PAGE_SIZE}
       totalTransactions={totalTransactions}
+      currency={baseCurrency}
     />
   );
 }

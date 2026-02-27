@@ -21,13 +21,15 @@ import { DeleteBudgetButton } from "@/components/DeleteBudgetButton";
 import { getCategoryIcon } from "@/lib/categoryIcons";
 import { getCurrentUserId } from "@/lib/auth";
 import { Button } from "@/components/ui/button";
+import { getUserBaseCurrency } from "@/db/queries/onboarding";
 
 export default async function Budgets() {
   const userId = await getCurrentUserId();
   
-  const [budgets, categories] = await Promise.all([
+  const [budgets, categories, baseCurrency] = await Promise.all([
     getBudgets(userId),
     getCategoriesByUser(userId),
+    getUserBaseCurrency(userId),
   ]);
 
   const totalBudget = budgets.reduce((sum, b) => sum + b.budgetAmount, 0);
@@ -64,7 +66,7 @@ export default async function Budgets() {
           </CardHeader>
           <CardContent>
             <CardTitle className="text-2xl">
-              {formatCurrency(totalBudget)}
+              {formatCurrency(totalBudget, baseCurrency)}
             </CardTitle>
           </CardContent>
         </Card>
@@ -77,7 +79,7 @@ export default async function Budgets() {
           </CardHeader>
           <CardContent>
             <CardTitle className="text-2xl text-orange-600">
-              {formatCurrency(totalSpent)}
+              {formatCurrency(totalSpent, baseCurrency)}
             </CardTitle>
             <p className="text-muted-foreground mt-1 text-xs">
               {spentPercent}% of total budget
@@ -93,7 +95,7 @@ export default async function Budgets() {
           </CardHeader>
           <CardContent>
             <CardTitle className="text-2xl text-emerald-600">
-              {formatCurrency(totalRemaining)}
+              {formatCurrency(totalRemaining, baseCurrency)}
             </CardTitle>
           </CardContent>
         </Card>
@@ -185,10 +187,10 @@ export default async function Budgets() {
                 <CardContent className="space-y-3">
                   <div className="flex items-baseline justify-between">
                     <span className="text-2xl font-bold tabular-nums">
-                      {formatCurrency(budget.budgetSpent)}
+                      {formatCurrency(budget.budgetSpent, baseCurrency)}
                     </span>
                     <span className="text-muted-foreground text-sm">
-                      of {formatCurrency(budget.budgetAmount)}
+                      of {formatCurrency(budget.budgetAmount, baseCurrency)}
                     </span>
                   </div>
 
@@ -217,8 +219,8 @@ export default async function Budgets() {
                       }
                     >
                       {isOver
-                        ? `${formatCurrency(Math.abs(remaining))} over`
-                        : `${formatCurrency(remaining)} left`}
+                        ? `${formatCurrency(Math.abs(remaining), baseCurrency)} over`
+                        : `${formatCurrency(remaining, baseCurrency)} left`}
                     </span>
                   </div>
 

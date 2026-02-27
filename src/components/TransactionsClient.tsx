@@ -139,6 +139,7 @@ export function TransactionsClient({
   currentPage,
   pageSize,
   totalTransactions,
+  currency,
 }: {
   transactions: Transaction[];
   accounts: Account[];
@@ -146,6 +147,7 @@ export function TransactionsClient({
   currentPage: number;
   pageSize: number;
   totalTransactions: number;
+  currency: string;
 }) {
   const [highlightedIds, setHighlightedIds] = useState<Set<number>>(new Set());
   const [deleteResult, setDeleteResult] = useState<{ status: "success" | "error"; description?: string } | null>(null);
@@ -226,7 +228,7 @@ export function TransactionsClient({
           </CardHeader>
           <CardContent>
             <CardTitle className="text-2xl text-emerald-600">
-              {formatCurrency(totalIncome)}
+              {formatCurrency(totalIncome, currency)}
             </CardTitle>
           </CardContent>
         </Card>
@@ -239,7 +241,7 @@ export function TransactionsClient({
           </CardHeader>
           <CardContent>
             <CardTitle className="text-2xl text-red-600">
-              {formatCurrency(totalExpenses)}
+              {formatCurrency(totalExpenses, currency)}
             </CardTitle>
           </CardContent>
         </Card>
@@ -334,7 +336,7 @@ export function TransactionsClient({
                           }`}
                       >
                         {transaction.type === "income" ? "+" : "−"}
-                        {formatCurrency(transaction.amount)}
+                        {formatCurrency(transaction.amount, currency)}
                       </TableCell>
                       <TableCell>
                         <div className="flex items-center gap-2">
