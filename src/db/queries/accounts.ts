@@ -2,7 +2,7 @@ import { db } from '@/index'; // you'll create this shared db instance
 import { transactionsTable, accountsTable } from '@/db/schema';
 import { eq, count } from 'drizzle-orm';
 
-export async function getAccountsWithDetails(userId: number) {
+export async function getAccountsWithDetails(userId: string) {
   return await db.select({
     id: accountsTable.id,
     accountName: accountsTable.name,

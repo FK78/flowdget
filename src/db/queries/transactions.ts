@@ -25,7 +25,7 @@ const transactionSelect = {
   is_recurring: transactionsTable.is_recurring,
 };
 
-function baseTransactionsQuery(userId: number) {
+function baseTransactionsQuery(userId: string) {
   return db.select(transactionSelect)
     .from(transactionsTable)
     .innerJoin(categoriesTable, eq(transactionsTable.category_id, categoriesTable.id))
@@ -34,17 +34,17 @@ function baseTransactionsQuery(userId: number) {
     .$dynamic();
 }
 
-export async function getTransactionsWithDetails(userId: number) {
+export async function getTransactionsWithDetails(userId: string) {
   return await baseTransactionsQuery(userId).orderBy(desc(transactionsTable.date));
 }
 
-export async function getLatestFiveTransactionsWithDetails(userId: number) {
+export async function getLatestFiveTransactionsWithDetails(userId: string) {
   return await baseTransactionsQuery(userId)
     .orderBy(desc(transactionsTable.date))
     .limit(5);
 }
 
-function getTotalByType(userId: number, type: 'income' | 'expense', monthsAgo = 0) {
+function getTotalByType(userId: string, type: 'income' | 'expense', monthsAgo = 0) {
   const { start, end } = getMonthRange(monthsAgo);
   return db.select({ total: sum(transactionsTable.amount) })
     .from(transactionsTable)
@@ -59,23 +59,23 @@ function getTotalByType(userId: number, type: 'income' | 'expense', monthsAgo = 
     );
 }
 
-export async function getTotalIncomeOfTransactionsThisMonth(userId: number) {
+export async function getTotalIncomeOfTransactionsThisMonth(userId: string) {
   return await getTotalByType(userId, 'income');
 }
 
-export async function getTotalExpensesOfTransactionsThisMonth(userId: number) {
+export async function getTotalExpensesOfTransactionsThisMonth(userId: string) {
   return await getTotalByType(userId, 'expense');
 }
 
-export async function getTotalIncomeLastMonth(userId: number) {
+export async function getTotalIncomeLastMonth(userId: string) {
   return await getTotalByType(userId, 'income', 1);
 }
 
-export async function getTotalExpensesLastMonth(userId: number) {
+export async function getTotalExpensesLastMonth(userId: string) {
   return await getTotalByType(userId, 'expense', 1);
 }
 
-function getSavingsDeposits(userId: number, monthsAgo = 0) {
+function getSavingsDeposits(userId: string, monthsAgo = 0) {
   const { start, end } = getMonthRange(monthsAgo);
   return db.select({ total: sum(transactionsTable.amount) })
     .from(transactionsTable)
@@ -90,15 +90,15 @@ function getSavingsDeposits(userId: number, monthsAgo = 0) {
     );
 }
 
-export async function getSavingsDepositsThisMonth(userId: number) {
+export async function getSavingsDepositsThisMonth(userId: string) {
   return await getSavingsDeposits(userId);
 }
 
-export async function getSavingsDepositsLastMonth(userId: number) {
+export async function getSavingsDepositsLastMonth(userId: string) {
   return await getSavingsDeposits(userId, 1);
 }
 
-export async function getTotalSpendByCategoryThisMonth(userId: number){
+export async function getTotalSpendByCategoryThisMonth(userId: string){
   const { start, end } = getMonthRange();
 
   return await db.select({

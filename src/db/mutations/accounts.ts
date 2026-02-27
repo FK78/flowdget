@@ -4,10 +4,13 @@ import { db } from '@/index';
 import { accountsTable, transactionsTable } from '@/db/schema';
 import { eq } from 'drizzle-orm';
 import { revalidatePath } from 'next/cache';
+import { getCurrentUserId } from '@/lib/auth';
 
 export async function addAccount(formData: FormData) {
+  const userId = await getCurrentUserId();
+
   const [result] = await db.insert(accountsTable).values({
-    user_id: 1,
+    user_id: userId,
     name: formData.get('name') as string,
     type: formData.get('type') as 'checking' | 'savings' | 'credit_card' | 'investment',
     balance: parseFloat(formData.get('balance') as string),

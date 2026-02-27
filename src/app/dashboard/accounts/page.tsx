@@ -17,6 +17,7 @@ import { getAccountsWithDetails } from "@/db/queries/accounts";
 import { AccountFormDialog } from "@/components/AddAccountForm";
 import { DeleteAccountButton } from "@/components/DeleteAccountButton";
 import { formatCurrency } from "@/lib/formatCurrency";
+import { getCurrentUserId } from "@/lib/auth";
 
 const typeConfig: Record<string, { label: string; variant: "default" | "secondary" | "destructive" | "outline" }> = {
   checking: { label: "Checking", variant: "secondary" },
@@ -33,8 +34,9 @@ export const typeIcons: Record<string, typeof Wallet> = {
 };
 
 export default async function Accounts() {
+  const userId = await getCurrentUserId();
 
-  const accounts = await getAccountsWithDetails(1);
+  const accounts = await getAccountsWithDetails(userId);
 
   const liabilityTypes = new Set(["credit_card"]);
   const totalAssets = accounts

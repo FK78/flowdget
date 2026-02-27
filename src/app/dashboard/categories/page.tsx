@@ -10,9 +10,12 @@ import { getCategoriesByUser } from "@/db/queries/categories";
 import { CategoryFormDialog } from "@/components/CategoryFormDialog";
 import { DeleteCategoryButton } from "@/components/DeleteCategoryButton";
 import { getCategoryIcon } from "@/lib/categoryIcons";
+import { getCurrentUserId } from "@/lib/auth";
 
 export default async function Categories() {
-  const categories = await getCategoriesByUser(1);
+  const userId = await getCurrentUserId();
+  
+  const categories = await getCategoriesByUser(userId);
 
   const defaultCategories = categories.filter((c) => c.is_default);
   const customCategories = categories.filter((c) => !c.is_default);

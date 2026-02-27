@@ -28,20 +28,21 @@ import { SummaryCard } from "@/components/SummaryCard";
 import { TransactionRow } from "@/components/TransactionRow";
 import { AccountCard } from "@/components/AccountCard";
 import { SpendCategoryRow } from "@/components/SpendCategoryRow";
-
-const USER_ID = 1;
+import { getCurrentUserId } from "@/lib/auth";
 
 export default async function Home() {
+  const userId = await getCurrentUserId();
+  
   const [lastFiveTransactions, accounts, expensesRows, incomeRows, lastMonthIncomeRows, lastMonthExpensesRows, savingsThisMonthRows, spendByCategory] =
     await Promise.all([
-      getLatestFiveTransactionsWithDetails(USER_ID),
-      getAccountsWithDetails(USER_ID),
-      getTotalExpensesOfTransactionsThisMonth(USER_ID),
-      getTotalIncomeOfTransactionsThisMonth(USER_ID),
-      getTotalIncomeLastMonth(USER_ID),
-      getTotalExpensesLastMonth(USER_ID),
-      getSavingsDepositsThisMonth(USER_ID),
-      getTotalSpendByCategoryThisMonth(USER_ID),
+      getLatestFiveTransactionsWithDetails(userId),
+      getAccountsWithDetails(userId),
+      getTotalExpensesOfTransactionsThisMonth(userId),
+      getTotalIncomeOfTransactionsThisMonth(userId),
+      getTotalIncomeLastMonth(userId),
+      getTotalExpensesLastMonth(userId),
+      getSavingsDepositsThisMonth(userId),
+      getTotalSpendByCategoryThisMonth(userId),
     ]);
 
   const income = parseTotal(incomeRows);
