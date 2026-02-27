@@ -37,11 +37,11 @@ type TopCategoryPoint = {
 function formatMonthLabel(month: string) {
   const [year, monthIndex] = month.split("-").map(Number);
   const date = new Date(year, (monthIndex ?? 1) - 1, 1);
-  return new Intl.DateTimeFormat("en-US", { month: "short" }).format(date);
+  return new Intl.DateTimeFormat("en-GB", { month: "short" }).format(date);
 }
 
 function formatCompactCurrency(amount: number, currency: string) {
-  return new Intl.NumberFormat("en-US", {
+  return new Intl.NumberFormat("en-GB", {
     style: "currency",
     currency,
     notation: "compact",

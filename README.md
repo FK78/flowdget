@@ -4,7 +4,7 @@ A personal finance dashboard for tracking accounts, budgets, transactions, and s
 
 ## Features
 
-- **Accounts** — View, add, edit, and delete checking, savings, credit card, and investment accounts with live balance tracking
+- **Accounts** — View, add, edit, and delete current account, savings, credit card, and investment accounts with live balance tracking
 - **Transactions** — Full CRUD for income and expenses with category labels, account attribution, and recurring indicators. Adding, editing, or deleting a transaction automatically adjusts the linked account balance.
 - **Budgets** — Set monthly or weekly budgets per category and track spending progress with visual indicators
 - **Dashboard** — Summary cards, recent transactions, spending breakdown by category, and account overview in one place
@@ -126,7 +126,7 @@ src/
 
 Seven core tables plus onboarding/template tables managed by Drizzle ORM:
 
-- **accounts** — per-user financial accounts (checking, savings, credit_card, investment). Balance updated automatically on transaction changes.
+- **accounts** — per-user financial accounts (current account, savings, creditCard, investment). Balance updated automatically on transaction changes.
 - **categories** — spending categories with color and icon
 - **transactions** — income/expense records linked to accounts and categories. Cascade-deleted when parent account is removed.
 - **budgets** — spending limits per category with monthly/weekly periods

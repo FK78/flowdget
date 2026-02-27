@@ -1,6 +1,6 @@
-import { boolean, date, integer, pgEnum, pgTable, real, timestamp, varchar, uuid } from "drizzle-orm/pg-core";
+import { boolean, date, integer, pgEnum, pgTable, real, timestamp, varchar, uuid, text } from "drizzle-orm/pg-core";
 
-export const accountTypeEnum = pgEnum("account_type", ["checking", "savings", "credit_card", "investment"]);
+export const accountTypeEnum = pgEnum("account_type", ["currentAccount", "savings", "creditCard", "investment"]);
 export const periodEnum = pgEnum("period", ["monthly", "weekly"]);
 export const transactionTypeEnum = pgEnum("transaction_type", ["income", "expense"]);
 
@@ -15,7 +15,7 @@ export const defaultCategoryTemplatesTable = pgTable("default_category_templates
 
 export const userOnboardingTable = pgTable("user_onboarding", {
   user_id: uuid("user_id").primaryKey(),
-  base_currency: varchar({ length: 3 }).notNull().default("USD"),
+  base_currency: varchar({ length: 3 }).notNull().default("GBP"),
   use_default_categories: boolean().notNull().default(false),
   completed: boolean().notNull().default(false),
   completed_at: timestamp("completed_at", { withTimezone: true }),
@@ -66,4 +66,26 @@ export const categorisationRulesTable = pgTable("categorisation_rules", {
     pattern: varchar({ length: 255 }).notNull(),
     category_id: integer("category_id").references(() => categoriesTable.id),
     priority: integer().notNull(),
+})
+
+export const budgetAlertPreferencesTable = pgTable("budget_alert_preferences", {
+    id: integer().primaryKey().generatedAlwaysAsIdentity(),
+    budget_id: integer("budget_id").notNull().references(() => budgetsTable.id, { onDelete: "cascade" }),
+    user_id: uuid("user_id").notNull(),
+    threshold: real().notNull().default(80),
+    browser_alerts: boolean("browser_alerts").notNull().default(true),
+    email_alerts: boolean("email_alerts").notNull().default(false),
+})
+
+export const alertTypeEnum = pgEnum("alert_type", ["threshold_warning", "over_budget"]);
+
+export const budgetNotificationsTable = pgTable("budget_notifications", {
+    id: integer().primaryKey().generatedAlwaysAsIdentity(),
+    user_id: uuid("user_id").notNull(),
+    budget_id: integer("budget_id").notNull().references(() => budgetsTable.id, { onDelete: "cascade" }),
+    alert_type: alertTypeEnum("alert_type").notNull(),
+    message: text().notNull(),
+    is_read: boolean("is_read").notNull().default(false),
+    emailed: boolean().notNull().default(false),
+    created_at: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
 })

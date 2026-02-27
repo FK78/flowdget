@@ -35,15 +35,19 @@ type AccountItem = {
 };
 
 const ACCOUNT_TYPE_COLORS: Record<string, string> = {
-  checking: "var(--color-chart-1)",
+  currentAccount: "var(--color-chart-1)",
   savings: "var(--color-chart-2)",
-  credit_card: "var(--color-chart-3)",
+  creditCard: "var(--color-chart-3)",
   investment: "var(--color-chart-4)",
   other: "var(--color-chart-5)",
 };
 
 function formatTypeLabel(type: string) {
-  if (type === "credit_card") {
+  if (type === "currentAccount") {
+    return "Current Account";
+  }
+
+  if (type === "creditCard") {
     return "Credit Card";
   }
 
@@ -54,7 +58,7 @@ function formatTypeLabel(type: string) {
 }
 
 function formatCompactCurrency(amount: number, currency: string) {
-  return new Intl.NumberFormat("en-US", {
+  return new Intl.NumberFormat("en-GB", {
     style: "currency",
     currency,
     notation: "compact",

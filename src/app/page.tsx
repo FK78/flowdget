@@ -58,7 +58,7 @@ export default function Home() {
             </div>
             <h3 className="font-semibold">Multi-Account</h3>
             <p className="text-sm text-muted-foreground">
-              Manage checking, savings, credit cards, and investments with a
+              Manage current accounts, savings, credit cards, and investments with a
               clear assets-vs-liabilities view.
             </p>
           </div>

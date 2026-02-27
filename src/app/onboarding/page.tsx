@@ -31,9 +31,9 @@ import { normalizeBaseCurrency, SUPPORTED_BASE_CURRENCIES } from "@/lib/currency
 type Step = "accounts" | "categories" | "budgets" | "review";
 
 const currencyLabels: Record<(typeof SUPPORTED_BASE_CURRENCIES)[number], string> = {
+  GBP: "British Pound (£)",
   USD: "US Dollar ($)",
   EUR: "Euro (€)",
-  GBP: "British Pound (£)",
   CAD: "Canadian Dollar (CA$)",
   AUD: "Australian Dollar (A$)",
 };
@@ -149,7 +149,7 @@ export default async function OnboardingPage({
             <form action={addOnboardingAccount} className="grid gap-4 rounded-md border p-4">
               <div className="grid gap-2">
                 <Label htmlFor="name">Account Name</Label>
-                <Input id="name" name="name" placeholder="Main Checking" required />
+                <Input id="name" name="name" placeholder="Main Current Account" required />
               </div>
               <div className="grid gap-2">
                 <Label htmlFor="type">Type</Label>
@@ -157,11 +157,11 @@ export default async function OnboardingPage({
                   id="type"
                   name="type"
                   className="border-input bg-background rounded-md border px-3 py-2 text-sm"
-                  defaultValue="checking"
+                  defaultValue="currentAccount"
                 >
-                  <option value="checking">Checking</option>
+                  <option value="currentAccount">Current Account</option>
                   <option value="savings">Savings</option>
-                  <option value="credit_card">Credit Card</option>
+                  <option value="creditCard">Credit Card</option>
                   <option value="investment">Investment</option>
                 </select>
               </div>

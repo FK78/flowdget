@@ -1,5 +1,5 @@
 -- Enums
-CREATE TYPE account_type AS ENUM ('checking', 'savings', 'credit_card', 'investment');
+CREATE TYPE account_type AS ENUM ('currentAccount', 'savings', 'creditCard', 'investment');
 CREATE TYPE period AS ENUM ('monthly', 'weekly');
 CREATE TYPE transaction_type AS ENUM ('income', 'expense');
 
@@ -66,6 +66,28 @@ CREATE TABLE user_onboarding (
   use_default_categories BOOLEAN NOT NULL DEFAULT false,
   completed BOOLEAN NOT NULL DEFAULT false,
   completed_at TIMESTAMPTZ
+);
+
+CREATE TYPE alert_type AS ENUM ('threshold_warning', 'over_budget');
+
+CREATE TABLE budget_alert_preferences (
+  id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+  budget_id INTEGER NOT NULL REFERENCES budgets(id) ON DELETE CASCADE,
+  user_id UUID NOT NULL,
+  threshold REAL NOT NULL DEFAULT 80,
+  browser_alerts BOOLEAN NOT NULL DEFAULT true,
+  email_alerts BOOLEAN NOT NULL DEFAULT false
+);
+
+CREATE TABLE budget_notifications (
+  id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+  user_id UUID NOT NULL,
+  budget_id INTEGER NOT NULL REFERENCES budgets(id) ON DELETE CASCADE,
+  alert_type alert_type NOT NULL,
+  message TEXT NOT NULL,
+  is_read BOOLEAN NOT NULL DEFAULT false,
+  emailed BOOLEAN NOT NULL DEFAULT false,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
 -- Seed data
