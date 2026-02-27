@@ -4,15 +4,6 @@ export const accountTypeEnum = pgEnum("account_type", ["checking", "savings", "c
 export const periodEnum = pgEnum("period", ["monthly", "weekly"]);
 export const transactionTypeEnum = pgEnum("transaction_type", ["income", "expense"]);
 
-// Legacy table used by seed.sql before auth.users integration.
-export const usersTable = pgTable("users", {
-  id: integer().primaryKey().generatedAlwaysAsIdentity(),
-  email: varchar({ length: 255 }).notNull(),
-  name: varchar({ length: 255 }).notNull(),
-  currency: varchar({ length: 3 }).notNull(),
-  created_at: date().defaultNow(),
-});
-
 export const accountsTable = pgTable("accounts", {
   id: integer().primaryKey().generatedAlwaysAsIdentity(),
   user_id: uuid("user_id").notNull(),

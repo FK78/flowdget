@@ -22,7 +22,6 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { addAccount, editAccount } from "@/db/mutations/accounts";
-import { getCurrentUserIdClient } from "@/lib/auth-client";
 
 type Account = {
   id: number;
@@ -53,8 +52,7 @@ export function AccountFormDialog({ account }: { account?: Account } = {}) {
       if (isEdit) {
         await editAccount(account.id, formData);
       } else {
-        const userId = await getCurrentUserIdClient();
-        await addAccount(formData, userId);
+        await addAccount(formData);
       }
       setView("success");
     });
