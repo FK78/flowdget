@@ -68,6 +68,28 @@ CREATE TABLE user_onboarding (
   completed_at TIMESTAMPTZ
 );
 
+CREATE TYPE alert_type AS ENUM ('threshold_warning', 'over_budget');
+
+CREATE TABLE budget_alert_preferences (
+  id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+  budget_id INTEGER NOT NULL REFERENCES budgets(id) ON DELETE CASCADE,
+  user_id UUID NOT NULL,
+  threshold REAL NOT NULL DEFAULT 80,
+  browser_alerts BOOLEAN NOT NULL DEFAULT true,
+  email_alerts BOOLEAN NOT NULL DEFAULT false
+);
+
+CREATE TABLE budget_notifications (
+  id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+  user_id UUID NOT NULL,
+  budget_id INTEGER NOT NULL REFERENCES budgets(id) ON DELETE CASCADE,
+  alert_type alert_type NOT NULL,
+  message TEXT NOT NULL,
+  is_read BOOLEAN NOT NULL DEFAULT false,
+  emailed BOOLEAN NOT NULL DEFAULT false,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
 -- Seed data
 
 INSERT INTO default_category_templates (name, color, icon, sort_order, is_active) VALUES
