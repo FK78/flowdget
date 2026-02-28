@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { Suspense } from "react";
 import { redirect } from "next/navigation";
 import { DashboardNav } from "@/components/DashboardNav";
@@ -31,9 +32,10 @@ export default async function DashboardLayout({
           <div className="flex items-center gap-6">
             <Link
               href="/dashboard"
-              className="text-lg font-bold tracking-tight"
+              className="flex items-center gap-2 text-lg font-bold tracking-tight"
             >
-              MoneyScope
+              <Image src="/logo.svg" alt="Flowdget logo" width={28} height={28} className="rounded" />
+              Flowdget
             </Link>
             <DashboardNav />
           </div>

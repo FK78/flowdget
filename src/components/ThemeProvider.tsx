@@ -37,7 +37,7 @@ function applyTheme(theme: Theme) {
 export function ThemeProvider({
   children,
   defaultTheme = "system",
-  storageKey = "moneyscope-theme",
+  storageKey = "flowdget-theme",
 }: ThemeProviderProps) {
   const [theme, setTheme] = useState<Theme>(() => {
     if (typeof window === "undefined") return defaultTheme;

@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { Wallet, TrendingUp, PieChart, Shield } from "lucide-react";
+import Image from "next/image";
+import { TrendingUp, PieChart, Shield } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export default function Home() {
@@ -8,8 +9,8 @@ export default function Home() {
       {/* Hero */}
       <header className="flex flex-1 flex-col items-center justify-center gap-8 px-6 py-24 text-center">
         <div className="flex items-center gap-2 text-sm font-medium text-muted-foreground">
-          <Wallet className="h-5 w-5" />
-          <span>MoneyScope</span>
+          <Image src="/logo.svg" alt="Flowdget logo" width={24} height={24} className="rounded" />
+          <span>Flowdget</span>
         </div>
         <h1 className="max-w-2xl text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl">
           Take control of your{" "}
@@ -67,7 +68,7 @@ export default function Home() {
 
       {/* Footer */}
       <footer className="border-t px-6 py-6 text-center text-xs text-muted-foreground">
-        MoneyScope &mdash; Built with Next.js, Supabase &amp; Drizzle ORM
+        Flowdget &mdash; Built with Next.js, Supabase &amp; Drizzle ORM
       </footer>
     </div>
   );
