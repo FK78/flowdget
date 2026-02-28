@@ -48,7 +48,7 @@ export function SignUpForm({
                     data: {
                         display_name: displayName,
                     },
-                    emailRedirectTo: `${window.location.origin}/auth/callback?next=/dashboard`,
+                    emailRedirectTo: `${process.env.NEXT_PUBLIC_SITE_URL || window.location.origin}/auth/callback?next=/dashboard`,
                 },
             });
             if (error) throw error;
